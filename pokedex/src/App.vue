@@ -4,7 +4,7 @@
 </template>
 
 <script>
-import pokemon from './components/pokedexVista.vue'
+import pokedex from './components/pokedexVista.vue'
 
 export default {
   name: 'App',
