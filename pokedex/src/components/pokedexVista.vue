@@ -5,13 +5,23 @@
 
     <div class="container">
       <div class="d-flex justify-content-between my-4 gap-2">
-       
-        <button class="btn btn-outline-primary" type="button" data-bs-toggle="modal" data-bs-target="#exampleModal" >Show
+
+        <button class="btn btn-outline-primary" type="button" data-bs-toggle="modal" data-bs-target="#exampleModal">Show
           Team</button>
-        <button class="btn btn-outline-warning" type="button" data-bs-toggle="modal" data-bs-target="#favoriteModal">Show Favorite</button>
-        <button class="btn btn-outline-success" type="button" data-bs-toggle="button">show by type</button>
+        <button class="btn btn-outline-warning" type="button" data-bs-toggle="modal"
+          data-bs-target="#favoriteModal">Show Favorite</button>
         <button class="btn btn-outline-danger" type="button" data-bs-toggle="button">show by range</button>
       </div>
+   
+      <div v-if="!types">Loading...</div>
+      <div v-else>
+        <div class="d-flex justify-content-between my-4" >
+          <button>Show All Pokemons</button>
+          <button  v-for="type in types" :key="type.name" :style="getCardStyle(type)">{{ type.name }}</button>
+
+      </div>
+    </div>
+
 
       <div class="row ">
         <div class="col-lg-3 col-md-4 col-sm-5 mb-4" v-for="pokemons in pokemon" :key="pokemons.id" id="listPokemons">
@@ -61,86 +71,89 @@
         <div class="container">
           <div class="row">
 
-            <div v-if=" equipo.length < 6">
-            <h5 class="text-white my-5"> No has completado el equipo, deben ser 6 </h5>
+            <div v-if="equipo.length < 6">
+              <h5 class="text-white my-5"> No has completado el equipo, deben ser 6 </h5>
             </div>
 
-          <div v-else class="modal-body col-lg-4 col-md-4 col-sm-5 mb-4" v-for="equipos in equipo" :key="equipos.id" id="equipList">
-          <div class="card" :id="equipos.id" :style="getCardStyle(equipos)">
-            <div class="card-body">
-              <img :src="equipos.sprites.front_default" class="card-img my-3" alt="Pokemon Image">
-              <div class="card-img-overlay">
-                <div class="d-flex justify-content-between">
-                  <button @click="updateEquip(equipos)" :id="equipos.id + 'equipF'">EQUIP PKMN</button>
-                  <button class="d-none" @click="updateEquip(equipos)" :id="equipos.id + 'equipNF'">TEAM UP
-                    PKMN</button>
-                  <h5 class="card-title">N.° #{{ equipos.id.toString().padStart(3, '0') }} </h5>
-                  <button @click="addFav(equipos)" :id="equipos.id + 'fav'" class="noButton"><span
-                      class="fa fa-star"></span></button>
-                </div>
+            <div v-else class="modal-body col-lg-4 col-md-4 col-sm-5 mb-4" v-for="equipos in equipo" :key="equipos.id"
+              id="equipList">
+              <div class="card" :id="equipos.id" :style="getCardStyle(equipos)">
+                <div class="card-body">
+                  <img :src="equipos.sprites.front_default" class="card-img my-3" alt="Pokemon Image">
+                  <div class="card-img-overlay">
+                    <div class="d-flex justify-content-between">
+                      <button @click="updateEquip(equipos)" :id="equipos.id + 'equipF'">EQUIP PKMN</button>
+                      <button class="d-none" @click="updateEquip(equipos)" :id="equipos.id + 'equipNF'">TEAM UP
+                        PKMN</button>
+                      <h5 class="card-title">N.° #{{ equipos.id.toString().padStart(3, '0') }} </h5>
+                      <button @click="addFav(equipos)" :id="equipos.id + 'fav'" class="noButton"><span
+                          class="fa fa-star"></span></button>
+                    </div>
 
-              </div>
-              <div>
-                <div>
-                  <h2> {{ equipos.name }}</h2>
-                  <h4> Types: {{ getTypes(equipos) }}</h4>
-                  <p class="card-text"><small> height {{ equipos.height }} / weight {{ equipos.weight }}</small></p>
+                  </div>
+                  <div>
+                    <div>
+                      <h2> {{ equipos.name }}</h2>
+                      <h4> Types: {{ getTypes(equipos) }}</h4>
+                      <p class="card-text"><small> height {{ equipos.height }} / weight {{ equipos.weight }}</small></p>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-        </div>
         </div>
       </div>
     </div>
   </div>
 
-    <!-- Modal Favorito -->
-    <div class="modal fade" id="favoriteModal" tabindex="-1" aria-labelledby="favoriteModal" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered modal-xl modal-dialog-scrollable">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h1 class="modal-title fs-5 text-white" id="exampleModalLabel">Favorite List</h1>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          
+  <!-- Modal Favorito -->
+  <div class="modal fade" id="favoriteModal" tabindex="-1" aria-labelledby="favoriteModal" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-xl modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5 text-white" id="exampleModalLabel">Favorite List</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
 
-          <div class="container">
-            <div class="row overflowFav">
-              <div v-if="favorite.length ===0">
-                <h5 class="text-white my-5"> No hay favoritos </h5>
-              </div>
-            <div v-else class="modal-body col-lg-4 col-md-4 col-sm-5 mb-4 " v-for="favorites in favorite" :key="favorites.id" id="equipList">
-            <div class="card" :id="favorites.id" :style="getCardStyle(favorites)">
-              <div class="card-body">
-                <img :src="favorites.sprites.front_default" class="card-img my-3" alt="Pokemon Image">
-                <div class="card-img-overlay">
-                  <div class="d-flex justify-content-between">
-                    <button @click="updateEquip(favorites)" :id="favorites.id + 'equipF'">EQUIP PKMN</button>
-                    <button class="d-none" @click="updateEquip(favorites)" :id="favorites.id + 'equipNF'">TEAM UP
-                      PKMN</button>
-                    <h5 class="card-title">N.° #{{ favorites.id.toString().padStart(3, '0') }} </h5>
-                    <button @click="addFav(favorites)" :id="favorites.id + 'fav'" class="noButton"><span
-                        class="fa fa-star"></span></button>
+
+        <div class="container">
+          <div class="row overflowFav">
+            <div v-if="favorite.length === 0">
+              <h5 class="text-white my-5"> No hay favoritos </h5>
+            </div>
+            <div v-else class="modal-body col-lg-4 col-md-4 col-sm-5 mb-4 " v-for="favorites in favorite"
+              :key="favorites.id" id="equipList">
+              <div class="card" :id="favorites.id" :style="getCardStyle(favorites)">
+                <div class="card-body">
+                  <img :src="favorites.sprites.front_default" class="card-img my-3" alt="Pokemon Image">
+                  <div class="card-img-overlay">
+                    <div class="d-flex justify-content-between">
+                      <button @click="updateEquip(favorites)" :id="favorites.id + 'equipF'">EQUIP PKMN</button>
+                      <button class="d-none" @click="updateEquip(favorites)" :id="favorites.id + 'equipNF'">TEAM UP
+                        PKMN</button>
+                      <h5 class="card-title">N.° #{{ favorites.id.toString().padStart(3, '0') }} </h5>
+                      <button @click="addFav(favorites)" :id="favorites.id + 'fav'" class="noButton"><span
+                          class="fa fa-star"></span></button>
+                    </div>
+
                   </div>
-  
-                </div>
-                <div>
                   <div>
-                    <h2> {{ favorites.name }}</h2>
-                    <h4> Types: {{ getTypes(favorites) }}</h4>
-                    <p class="card-text"><small> height {{ favorites.height }} / weight {{ favorites.weight }}</small></p>
+                    <div>
+                      <h2> {{ favorites.name }}</h2>
+                      <h4> Types: {{ getTypes(favorites) }}</h4>
+                      <p class="card-text"><small> height {{ favorites.height }} / weight {{ favorites.weight }}</small>
+                      </p>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-          </div>
-          </div>
         </div>
       </div>
     </div>
+  </div>
 
 
 
@@ -180,7 +193,8 @@ export default {
       equipo: [],
       equipCount: 1,
       favorite: [],
-      
+      types: null
+
     };
   },
 
@@ -199,10 +213,22 @@ export default {
         })
         .catch(err => console.log("Error fetching API: " + err.message));
     },
+    fetchTypes() {
+  fetch('https://pokeapi.co/api/v2/type')
+  .then(response => response.json())
+    .then(data => {
+      this.types = data.results;
+    })
+    .catch(error => {
+      console.error('Error fetching Pokemon types:', error);
+    });
+}
+  ,
     getTypes(pokemon) {
       return pokemon.types.map(type => type.type.name).join(" / ");
     },
     addFav(pokemon) {
+
       const fav = document.getElementById(pokemon.id + 'fav')
       const pokemonId = pokemon.id
 
@@ -230,16 +256,26 @@ export default {
       }
 
     },
-    getCardStyle: function (pokemon) {
-      const pokemonType = pokemon.types.map(type => type.type.name)
-      if (pokemonType.length === 1) {
-        return { backgroundColor: this.colors[pokemonType[0]] };
-      } else if (pokemonType.length === 2) {
-        return {
-          background: `linear-gradient(to right, ${this.colors[pokemonType[0]]}, ${this.colors[pokemonType[1]]})`
-        };
-      }
-    },
+    getCardStyle: function (pokemonOrType) {
+  // Si el argumento pasado es un objeto de Pokémon
+  if (pokemonOrType.types) {
+    const pokemonType = pokemonOrType.types.map(type => type.type.name);
+    if (pokemonType.length === 1) {
+      return { backgroundColor: this.colors[pokemonType[0]] };
+    } else if (pokemonType.length === 2) {
+      return {
+        background: `linear-gradient(to right, ${this.colors[pokemonType[0]]}, ${this.colors[pokemonType[1]]})`
+      };
+    }
+  }
+  // Si el argumento pasado es solo un tipo de Pokémon
+  else {
+    console.log('entro a types')
+    const type = pokemonOrType;
+    return { backgroundColor: this.colors[type] };
+  }
+},
+
     updateEquip(pokemon) {
 
       const pokemonId = pokemon.id
@@ -276,7 +312,7 @@ export default {
           const buttonNF = document.getElementById(pokemon.id + 'equipNF');
           buttonNF.classList.remove('d-none')
 
-          
+
 
         } else {
           alert('El equipo esta completo')
@@ -285,10 +321,11 @@ export default {
 
 
     },
-    
+
   },
   mounted() {
     this.fetchData();
+    this.fetchTypes();
   },
 };
 </script>
@@ -314,15 +351,16 @@ body {
   background-color: #25292B
 }
 
-.modal-content{
+.modal-content {
   background-color: #25292B;
 }
-button.btn-close{
+
+button.btn-close {
   color: white !important;
   background-color: white;
 }
 
-.overflowFav{
+.overflowFav {
 
   overflow: auto;
   height: 420px;
