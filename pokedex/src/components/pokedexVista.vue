@@ -61,7 +61,7 @@
         <div class="container">
           <div class="row">
 
-            <div v-if="!equipComplet">
+            <div v-if=" equipo.length < 6">
             <h5 class="text-white my-5"> No has completado el equipo, deben ser 6 </h5>
             </div>
 
@@ -104,9 +104,14 @@
             <h1 class="modal-title fs-5 text-white" id="exampleModalLabel">Favorite List</h1>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
+          
+
           <div class="container">
             <div class="row overflowFav">
-            <div  class="modal-body col-lg-4 col-md-4 col-sm-5 mb-4 " v-for="favorites in favorite" :key="favorites.id" id="equipList">
+              <div v-if="favorite.length ===0">
+                <h5 class="text-white my-5"> No hay favoritos </h5>
+              </div>
+            <div v-else class="modal-body col-lg-4 col-md-4 col-sm-5 mb-4 " v-for="favorites in favorite" :key="favorites.id" id="equipList">
             <div class="card" :id="favorites.id" :style="getCardStyle(favorites)">
               <div class="card-body">
                 <img :src="favorites.sprites.front_default" class="card-img my-3" alt="Pokemon Image">
@@ -174,7 +179,6 @@ export default {
       },
       equipo: [],
       equipCount: 1,
-      equipComplet: false,
       favorite: [],
       
     };
@@ -252,7 +256,6 @@ export default {
         if (index !== -1) {
           this.equipo.splice(index, 1);
           this.equipCount -= 1
-          this.equipComplet = false
 
 
         }
@@ -273,10 +276,7 @@ export default {
           const buttonNF = document.getElementById(pokemon.id + 'equipNF');
           buttonNF.classList.remove('d-none')
 
-            if (this.equipCount == 7) {
-              this.equipComplet = true
-                        
-            }  
+          
 
         } else {
           alert('El equipo esta completo')
