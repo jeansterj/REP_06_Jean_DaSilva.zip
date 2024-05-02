@@ -6,9 +6,9 @@
     <div class="container">
       <div class="d-flex justify-content-between my-4 gap-2">
        
-        <button class="btn btn-outline-primary" type="button" :disabled="!equipComplet" data-bs-toggle="modal" data-bs-target="#exampleModal" @mouseover="messageEquip()" id="buttonModalEquip">Show
+        <button class="btn btn-outline-primary" type="button" data-bs-toggle="modal" data-bs-target="#exampleModal" >Show
           Team</button>
-        <button class="btn btn-outline-warning" type="button" data-bs-toggle="button">Show Favorite</button>
+        <button class="btn btn-outline-warning" type="button" data-bs-toggle="modal" data-bs-target="#favoriteModal">Show Favorite</button>
         <button class="btn btn-outline-success" type="button" data-bs-toggle="button">show by type</button>
         <button class="btn btn-outline-danger" type="button" data-bs-toggle="button">show by range</button>
       </div>
@@ -60,7 +60,12 @@
         </div>
         <div class="container">
           <div class="row">
-          <div class="modal-body col-lg-4 col-md-4 col-sm-5 mb-4" v-for="equipos in equipo" :key="equipos.id" id="equipList">
+
+            <div v-if="!equipComplet">
+            <h5 class="text-white my-5"> No has completado el equipo, deben ser 6 </h5>
+            </div>
+
+          <div v-else class="modal-body col-lg-4 col-md-4 col-sm-5 mb-4" v-for="equipos in equipo" :key="equipos.id" id="equipList">
           <div class="card" :id="equipos.id" :style="getCardStyle(equipos)">
             <div class="card-body">
               <img :src="equipos.sprites.front_default" class="card-img my-3" alt="Pokemon Image">
@@ -73,9 +78,6 @@
                   <button @click="addFav(equipos)" :id="equipos.id + 'fav'" class="noButton"><span
                       class="fa fa-star"></span></button>
                 </div>
-
-
-
 
               </div>
               <div>
@@ -93,6 +95,47 @@
       </div>
     </div>
   </div>
+
+    <!-- Modal Favorito -->
+    <div class="modal fade" id="favoriteModal" tabindex="-1" aria-labelledby="favoriteModal" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered modal-xl modal-dialog-scrollable">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5 text-white" id="exampleModalLabel">Favorite List</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="container">
+            <div class="row overflowFav">
+            <div  class="modal-body col-lg-4 col-md-4 col-sm-5 mb-4 " v-for="favorites in favorite" :key="favorites.id" id="equipList">
+            <div class="card" :id="favorites.id" :style="getCardStyle(favorites)">
+              <div class="card-body">
+                <img :src="favorites.sprites.front_default" class="card-img my-3" alt="Pokemon Image">
+                <div class="card-img-overlay">
+                  <div class="d-flex justify-content-between">
+                    <button @click="updateEquip(favorites)" :id="favorites.id + 'equipF'">EQUIP PKMN</button>
+                    <button class="d-none" @click="updateEquip(favorites)" :id="favorites.id + 'equipNF'">TEAM UP
+                      PKMN</button>
+                    <h5 class="card-title">N.° #{{ favorites.id.toString().padStart(3, '0') }} </h5>
+                    <button @click="addFav(favorites)" :id="favorites.id + 'fav'" class="noButton"><span
+                        class="fa fa-star"></span></button>
+                  </div>
+  
+                </div>
+                <div>
+                  <div>
+                    <h2> {{ favorites.name }}</h2>
+                    <h4> Types: {{ getTypes(favorites) }}</h4>
+                    <p class="card-text"><small> height {{ favorites.height }} / weight {{ favorites.weight }}</small></p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
 
 
@@ -204,7 +247,6 @@ export default {
         const buttonNF = document.getElementById(pokemon.id + 'equipNF');
         buttonNF.classList.add('d-none')
 
-        buttonModalEquip
 
         const index = this.equipo.findIndex(p => p.id === pokemon.id);
         if (index !== -1) {
@@ -243,17 +285,7 @@ export default {
 
 
     },
-    messageEquip(){
-
-      const buttonModalEquip = document.getElementById('buttonModalEquip');
-
-      if (this.equipComplet === false) {
-        buttonModalEquip.setAttribute("title", "complete the team to see it")
-      } else{
-        buttonModalEquip.removeAttribute("title")
-      }
-
-    }
+    
   },
   mounted() {
     this.fetchData();
@@ -288,5 +320,11 @@ body {
 button.btn-close{
   color: white !important;
   background-color: white;
+}
+
+.overflowFav{
+
+  overflow: auto;
+  height: 420px;
 }
 </style>
