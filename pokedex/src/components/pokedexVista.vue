@@ -160,8 +160,12 @@
 
 </template>
 <script>
+import slider from "./SlidePokemon.vue";
 
 export default {
+  components:{
+    slider
+  },
   data() {
     return {
       title: "Pokedex",
@@ -234,7 +238,6 @@ export default {
 
       const exist = this.favorite.find(p => p.id === pokemonId)
 
-
       if (exist) {
 
         fav.classList.remove('fav')
@@ -273,7 +276,6 @@ export default {
   }
 },
     updateEquip(pokemon) {
-
       const pokemonId = pokemon.id
       const exist = this.equipo.find(p => p.id === pokemonId)
       if (exist) {
@@ -283,39 +285,24 @@ export default {
         const buttonNF = document.getElementById(pokemon.id + 'equipNF');
         buttonNF.classList.add('d-none')
 
-
         const index = this.equipo.findIndex(p => p.id === pokemon.id);
         if (index !== -1) {
           this.equipo.splice(index, 1);
           this.equipCount -= 1
-
-
         }
-
-
-
       } else {
-
-
-
         if (this.equipCount < 7) {
           this.equipCount += 1
-
-
           this.equipo.push(pokemon)
           const buttonF = document.getElementById(pokemon.id + 'equipF');
           buttonF.classList.add('d-none')
           const buttonNF = document.getElementById(pokemon.id + 'equipNF');
           buttonNF.classList.remove('d-none')
 
-
-
         } else {
           alert('El equipo esta completo')
         }
       }
-
-
     },
     updateSelectedTypes(selectedTypes) {
     this.selectType = selectedTypes;
@@ -327,7 +314,6 @@ export default {
 
       return this.pokemon; 
     } else {
-      console.log(this.selectType)
       return this.pokemon.filter(pokemon => {
        return pokemon.types.some(type => type.type.name === this.selectType.name);
       });
