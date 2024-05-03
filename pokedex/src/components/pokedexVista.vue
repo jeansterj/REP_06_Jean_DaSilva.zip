@@ -16,15 +16,15 @@
       <div v-if="!types">Loading...</div>
       <div v-else>
         <div class="d-flex justify-content-between my-4" >
-          <button>Show All Pokemons</button>
-          <button  v-for="type in types" :key="type.name" :style="getCardStyle(type)">{{ type.name }}</button>
+          <button class="btn btn-light" @click="fetchData()">Show All Pokemons</button>
+          <button  v-for="type in types" :key="type.name" :style="getCardStyle(type)" class="btn" @click="updateSelectedTypes(type)">{{ type.name }}</button>
 
       </div>
     </div>
 
 
       <div class="row ">
-        <div class="col-lg-3 col-md-4 col-sm-5 mb-4" v-for="pokemons in pokemon" :key="pokemons.id" id="listPokemons">
+        <div class="col-lg-3 col-md-4 col-sm-5 mb-4" v-for="pokemons in filtrePokemons" :key="pokemons.id" id="listPokemons">
 
           <div class="card" :id="pokemons.id" :style="getCardStyle(pokemons)">
             <div class="card-body">
@@ -193,14 +193,14 @@ export default {
       equipo: [],
       equipCount: 1,
       favorite: [],
-      types: null
-
-    };
+      types: null,
+      selectType: null, 
+    }
   },
 
   methods: {
     fetchData() {
-      const maxPokemon = 9
+      const maxPokemon = 12
       fetch('https://pokeapi.co/api/v2/pokemon/?limit=' + maxPokemon)
         .then(response => response.json())
         .then(data => {
@@ -208,13 +208,14 @@ export default {
           Promise.all(data.results.map(pokemon => fetch(pokemon.url).then(response => response.json())))
             .then(pokemonDetails => {
               this.pokemon = pokemonDetails;
+
             })
             .catch(err => console.log("Error fetching Pokemon details: " + err.message));
         })
         .catch(err => console.log("Error fetching API: " + err.message));
     },
     fetchTypes() {
-  fetch('https://pokeapi.co/api/v2/type')
+   fetch('https://pokeapi.co/api/v2/type')
   .then(response => response.json())
     .then(data => {
       this.types = data.results;
@@ -222,8 +223,7 @@ export default {
     .catch(error => {
       console.error('Error fetching Pokemon types:', error);
     });
-}
-  ,
+},
     getTypes(pokemon) {
       return pokemon.types.map(type => type.type.name).join(" / ");
     },
@@ -257,7 +257,6 @@ export default {
 
     },
     getCardStyle: function (pokemonOrType) {
-  // Si el argumento pasado es un objeto de Pokémon
   if (pokemonOrType.types) {
     const pokemonType = pokemonOrType.types.map(type => type.type.name);
     if (pokemonType.length === 1) {
@@ -268,14 +267,11 @@ export default {
       };
     }
   }
-  // Si el argumento pasado es solo un tipo de Pokémon
   else {
-    console.log('entro a types')
     const type = pokemonOrType;
-    return { backgroundColor: this.colors[type] };
+    return { backgroundColor: this.colors[type.name] };
   }
 },
-
     updateEquip(pokemon) {
 
       const pokemonId = pokemon.id
@@ -321,7 +317,23 @@ export default {
 
 
     },
+    updateSelectedTypes(selectedTypes) {
+    this.selectType = selectedTypes;
+  }
+  },
+  computed:{
+      filtrePokemons() {
+    if (!this.selectType) {
 
+      return this.pokemon; 
+    } else {
+      console.log(this.selectType)
+      return this.pokemon.filter(pokemon => {
+       return pokemon.types.some(type => type.type.name === this.selectType.name);
+      });
+    }
+  
+  }
   },
   mounted() {
     this.fetchData();
