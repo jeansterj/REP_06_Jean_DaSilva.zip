@@ -2,8 +2,8 @@
 
 <div> 
     <div class="slider-container">
-    <input type="range" min="0" max="151" value="50" class="slider" id="mySlider">
-    <p>Value: <span id="sliderValue">50</span></p>
+        <input type="range" min="1" max="151" v-model="selectedRange">
+        <p>Desde el Pokémon #{{ selectedRange[0] }} hasta el Pokémon #{{ selectedRange[1] }}</p>
     </div>
 
 
@@ -16,7 +16,7 @@ export default {
 data(){
 return {
 
-    min: 0,
+    selectedRange: [1, 151] // Rango inicial, del primer al último Pokémon
 
 }
 
