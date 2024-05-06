@@ -1,5 +1,29 @@
 <template>
-  <h2>{{ this.title }} </h2>
+
+
+  <button @click="showStore()">Store</button>
+  <button @click="showPokedex()">Pokedex</button>
+
+
+
+<div v-if="activeStore">
+
+  <h2>{{ this.titleStore }} </h2>
+
+
+<inventory></inventory>
+
+
+
+</div>
+
+
+
+
+
+  <div v-if="activePokedex">
+  
+    <h2>{{ this.titlePokedex }} </h2>
   <div v-if="!pokemon">Loading...</div>
   <div v-else>
 
@@ -159,6 +183,9 @@
       </div>
     </div>
   </div>
+  </div>
+
+  
 
 
 
@@ -166,14 +193,18 @@
 </template>
 <script>
 import slider from "./SlidePokemon.vue";
+import inventory from "./InventoryItem.vue";
+
 
 export default {
   components: {
-    slider
+    slider,
+    inventory
   },
   data() {
     return {
-      title: "Pokedex",
+      titleStore:"Item Store",
+      titlePokedex: "Pokedex",
       pokemon: null,
       activeFav: false,
       colors: {
@@ -207,7 +238,9 @@ export default {
       filter: false,
       filterBusq: false,
       minRange: 0,
-      maxRange: 0
+      maxRange: 0,
+      activeStore: false,
+      activePokedex: false
     }
   },
 
@@ -236,6 +269,12 @@ export default {
         .catch(error => {
           console.error('Error fetching Pokemon types:', error);
         });
+    },
+    showStore(){
+      this.activeStore = !this.activeStore
+    },
+    showPokedex(){
+      this.activePokedex = !this.activePokedex
     },
     showFilter() {
       this.filter = !this.filter;
