@@ -10,21 +10,26 @@
           Team</button>
         <button class="btn btn-outline-warning" type="button" data-bs-toggle="modal"
           data-bs-target="#favoriteModal">Show Favorite</button>
-        <button class="btn btn-outline-danger" type="button" data-bs-toggle="button">show by range</button>
+        <button class="btn btn-outline-danger" type="button" data-bs-toggle="button" @click="showFilter()">show by
+          range</button>
       </div>
-   
+
       <div v-if="!types">Loading...</div>
       <div v-else>
-        <div class="d-flex justify-content-between my-4" >
-          <button class="btn btn-light" @click="fetchData()">Show All Pokemons</button>
-          <button  v-for="type in types" :key="type.name" :style="getCardStyle(type)" class="btn" @click="updateSelectedTypes(type)">{{ type.name }}</button>
+        <div class="d-flex justify-content-between my-4">
+          <button class="btn btn-light" @click="ShowAll()">Show All Pokemons</button>
+          <button v-for="type in types" :key="type.name" :style="getCardStyle(type)" class="btn"
+            @click="updateSelectedTypes(type)">{{ type.name }}</button>
 
+        </div>
       </div>
-    </div>
-    <slider></slider>
+      <div v-if="filter">
+        <slider @filterPokemonRange="filterPokemonRange"></slider>
+      </div>
 
       <div class="row ">
-        <div class="col-lg-3 col-md-4 col-sm-5 mb-4" v-for="pokemons in filtrePokemons" :key="pokemons.id" id="listPokemons">
+        <div class="col-lg-3 col-md-4 col-sm-5 mb-4" v-for="pokemons in filtrePokemons" :key="pokemons.id"
+          id="listPokemons">
 
           <div class="card" :id="pokemons.id" :style="getCardStyle(pokemons)">
             <div class="card-body">
@@ -54,8 +59,8 @@
           </div>
 
         </div>
-      </div>
 
+      </div>
     </div>
   </div>
 
@@ -163,7 +168,7 @@
 import slider from "./SlidePokemon.vue";
 
 export default {
-  components:{
+  components: {
     slider
   },
   data() {
@@ -198,13 +203,17 @@ export default {
       equipCount: 1,
       favorite: [],
       types: null,
-      selectType: null, 
+      selectType: null,
+      filter: false,
+      filterBusq: false,
+      minRange: 0,
+      maxRange: 0
     }
   },
 
   methods: {
     fetchData() {
-      const maxPokemon = 12
+      const maxPokemon = 151
       fetch('https://pokeapi.co/api/v2/pokemon/?limit=' + maxPokemon)
         .then(response => response.json())
         .then(data => {
@@ -219,15 +228,25 @@ export default {
         .catch(err => console.log("Error fetching API: " + err.message));
     },
     fetchTypes() {
-   fetch('https://pokeapi.co/api/v2/type')
-  .then(response => response.json())
-    .then(data => {
-      this.types = data.results;
-    })
-    .catch(error => {
-      console.error('Error fetching Pokemon types:', error);
-    });
-},
+      fetch('https://pokeapi.co/api/v2/type')
+        .then(response => response.json())
+        .then(data => {
+          this.types = data.results;
+        })
+        .catch(error => {
+          console.error('Error fetching Pokemon types:', error);
+        });
+    },
+    showFilter() {
+      this.filter = !this.filter;
+      this.filterBusq = !this.filterBusq;
+
+    },
+    filterPokemonRange(minRange, maxRange) {
+      this.minRange = minRange
+      this.maxRange = maxRange
+    },
+
     getTypes(pokemon) {
       return pokemon.types.map(type => type.type.name).join(" / ");
     },
@@ -260,21 +279,21 @@ export default {
 
     },
     getCardStyle: function (pokemonOrType) {
-  if (pokemonOrType.types) {
-    const pokemonType = pokemonOrType.types.map(type => type.type.name);
-    if (pokemonType.length === 1) {
-      return { backgroundColor: this.colors[pokemonType[0]] };
-    } else if (pokemonType.length === 2) {
-      return {
-        background: `linear-gradient(to right, ${this.colors[pokemonType[0]]}, ${this.colors[pokemonType[1]]})`
-      };
-    }
-  }
-  else {
-    const type = pokemonOrType;
-    return { backgroundColor: this.colors[type.name] };
-  }
-},
+      if (pokemonOrType.types) {
+        const pokemonType = pokemonOrType.types.map(type => type.type.name);
+        if (pokemonType.length === 1) {
+          return { backgroundColor: this.colors[pokemonType[0]] };
+        } else if (pokemonType.length === 2) {
+          return {
+            background: `linear-gradient(to right, ${this.colors[pokemonType[0]]}, ${this.colors[pokemonType[1]]})`
+          };
+        }
+      }
+      else {
+        const type = pokemonOrType;
+        return { backgroundColor: this.colors[type.name] };
+      }
+    },
     updateEquip(pokemon) {
       const pokemonId = pokemon.id
       const exist = this.equipo.find(p => p.id === pokemonId)
@@ -305,21 +324,25 @@ export default {
       }
     },
     updateSelectedTypes(selectedTypes) {
-    this.selectType = selectedTypes;
-  }
-  },
-  computed:{
-      filtrePokemons() {
-    if (!this.selectType) {
-
-      return this.pokemon; 
-    } else {
-      return this.pokemon.filter(pokemon => {
-       return pokemon.types.some(type => type.type.name === this.selectType.name);
-      });
+      this.selectType = selectedTypes;
+    },
+    ShowAll() {
+      this.selectType = null
     }
-  
-  }
+  },
+  computed: {
+    filtrePokemons() {
+      if (this.filterBusq) {
+        return this.pokemon.filter(pokemon => pokemon.id >= this.minRange && pokemon.id <= this.maxRange);
+      } else if (!this.selectType) {
+        return this.pokemon;
+      } else {
+        return this.pokemon.filter(pokemon => {
+          return pokemon.types.some(type => type.type.name === this.selectType.name);
+        });
+      } 
+
+    }
   },
   mounted() {
     this.fetchData();
