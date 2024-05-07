@@ -14,7 +14,6 @@
 <inventory></inventory>
 
 
-
 </div>
 
 
@@ -392,6 +391,10 @@ export default {
 <style>
 .card-img {
   width: 70%;
+}
+
+.card-img-item{
+  width: 40%;
 }
 
 .noButton {
