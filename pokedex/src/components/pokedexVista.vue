@@ -26,7 +26,7 @@
   <div v-if="!pokemon">Loading...</div>
   <div v-else>
 
-    <div class="container">
+    <div class="container text-capitalize">
       <div class="d-flex justify-content-between my-4 gap-2">
 
         <button class="btn btn-outline-primary" type="button" data-bs-toggle="modal" data-bs-target="#exampleModal">Show
@@ -39,9 +39,9 @@
 
       <div v-if="!types">Loading...</div>
       <div v-else>
-        <div class="d-flex justify-content-between my-4">
+        <div class="d-flex justify-content-between my-4 ">
           <button class="btn btn-light" @click="ShowAll()">Show All Pokemons</button>
-          <button v-for="type in types" :key="type.name" :style="getCardStyle(type)" class="btn"
+          <button v-for="type in types" :key="type.name" :style="getCardStyle(type)" class="btn text-capitalize"
             @click="updateSelectedTypes(type)">{{ type.name }}</button>
 
         </div>
@@ -96,7 +96,7 @@
           <h1 class="modal-title fs-5 text-white" id="exampleModalLabel">Equip PKMN List</h1>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <div class="container">
+        <div class="container text-capitalize">
           <div class="row">
 
             <div v-if="equipo.length < 6">
@@ -152,7 +152,7 @@
             </div>
             <div v-else class="modal-body col-lg-4 col-md-4 col-sm-5 mb-4 " v-for="favorites in favorite"
               :key="favorites.id" id="equipList">
-              <div class="card" :id="favorites.id" :style="getCardStyle(favorites)">
+              <div class="card text-capitalize" :id="favorites.id" :style="getCardStyle(favorites)">
                 <div class="card-body">
                   <img :src="favorites.sprites.front_default" class="card-img my-3" alt="Pokemon Image">
                   <div class="card-img-overlay">
