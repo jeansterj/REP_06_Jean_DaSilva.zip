@@ -2,17 +2,17 @@
 
     <div class="card" :id="inventary.id">
         <div class="card-body">
-            <img :src="inventary.sprites.default" class="card-img my-3 py-4" alt="item Image">
+            <img :src="inventary?.sprites?.default" class="card-img my-3 py-4" alt="item Image">
             <div class="card-img-overlay">
                 <div class="text-center">
-                    <h3> {{ inventary.name.replace('-', ' ') }}</h3>
+                    <h3> {{ inventary?.name.replace('-', ' ') }}</h3>
 
                 </div>
                 <div>
                     <div class="d-flex justify-content-around">
                         <button @click="useItem(inventary)">Use</button>
                         <p
-                            v-if="inventary.category.name == 'standard-balls' || inventary.category.name == 'special-ball'">
+                            v-if="inventary?.category?.name == 'standard-balls' || inventary?.category?.name == 'special-ball'">
                             {{ maxPokeball }}</p>
                         <p v-else>{{ maxItemsIventory }}</p>
 
