@@ -1,59 +1,34 @@
 <template>
 
     <h1>hello</h1>
-    <div class="container">
-
-        <div v-if="!inventary">Loading...</div>
-        <div v-else>
+    <div v-if="!inventary">Loading...</div>
+    <div v-else>
+        <div class="container">
             <div class="row mx-2">
 
-                <div class="col-lg-2 col-md-3 col-sm-4 mb-3 me-2 text-capitalize" v-for="invent in inventary"
-                    :key="invent.id">
-                    <div class="card" :id="invent.id">
-                        <div class="card-body">
-                            <img :src="invent.sprites.default" class="card-img my-3 py-4" alt="item Image">
-                            <div class="card-img-overlay">
-                                <div class="text-center">
-                                    <h3> {{ invent.name.replace('-', ' ') }}</h3>
 
-                                </div>
-                                <div>
-                                    <div class="d-flex justify-content-around">
-                                        <button @click="useItem(invent)">Use</button>
-                                        <p
-                                            v-if="invent.category.name == 'standard-balls' || invent.category.name == 'special-ball'">
-                                            {{ maxPokeball }}</p>
-                                        <p v-else>{{ maxItemsIventory }}</p>
-
-                                        <p> / {{ invent.quantity }}</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-
+                <itemStore class="col-lg-2 col-md-3 col-sm-4 mb-3 me-2" v-for="inventary in inventary"
+                    :key="inventary.id" :inventary="inventary" >
+                </itemStore>
             </div>
-
         </div>
-        <store :item="item" :inventary="inventary"></store>
-
     </div>
+    <store @buyItem="buyItem"></store>
+
 </template>
 <script>
 import store from "./StoreItem.vue";
+import itemStore from "./ItemStore.vue";
 
 export default {
     components: {
-        store
+        store,
+        itemStore
     },
     data() {
         return {
             item: null,
             inventary: [],
-            maxPokeball: 15,
-            maxItemsIventory: 5,
             categoryItem: 'standard-balls'
         }
     },
@@ -65,9 +40,6 @@ export default {
                     Promise.all(data.items.map(items => fetch(items.url).then(response => response.json())))
                         .then(itemsDetails => {
                             if (itemsDetails.length > 0) {
-                                itemsDetails.forEach(item => {
-                                    item.quantityStock = 15;
-                                });
                                 this.item = itemsDetails;
                                 this.addInventory(this.item)
                             }
@@ -92,14 +64,22 @@ export default {
                 });
             }
         },
-        useItem(item) {
+    buyItem(itemData) {
+        console.log(itemData.id)
+        console.log(this.inventary)
 
-            if (item.quantity > 0) {
+      const existingItem = this.inventary.find(item => item.id === itemData.id);
+      console.log(existingItem)
 
-                item.quantity -= 1
-                alert(`Se ha usado el objeto ${item.name.replace('-', ' ')} del inventario`)
-            }
-        }
+      if (existingItem) {
+        existingItem.quantity += itemData.selectedQuantity;
+      } else {
+        this.inventary.push(itemData);
+      }
+      itemData.selectedQuantity= 0
+    }
+        
+
     },
     mounted() {
         this.fetchData();

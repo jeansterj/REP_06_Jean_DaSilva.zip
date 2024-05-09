@@ -1,22 +1,22 @@
 <template>
 
-    <div class="card" :id="item.id">
+    <div class="card" :id="inventary.id">
         <div class="card-body">
-            <img :src="item.sprites.default" class="card-img my-3 py-4" alt="item Image">
+            <img :src="inventary.sprites.default" class="card-img my-3 py-4" alt="item Image">
             <div class="card-img-overlay">
                 <div class="text-center">
-                    <h3 > {{ item.name.replace('-',' ') }}</h3>
+                    <h3> {{ inventary.name.replace('-', ' ') }}</h3>
 
                 </div>
                 <div>
-                    <p>Stock {{ item.quantityStock }}</p>
-
                     <div class="d-flex justify-content-around">
+                        <button @click="useItem(inventary)">Use</button>
+                        <p
+                            v-if="inventary.category.name == 'standard-balls' || inventary.category.name == 'special-ball'">
+                            {{ maxPokeball }}</p>
+                        <p v-else>{{ maxItemsIventory }}</p>
 
-                        <button @click="decrement(item)">-</button>
-                        <p> / {{ seleccion }}</p>
-                        <button @click="increase(item)">+</button>
-
+                        <p> / {{ inventary.quantity }}</p>
                     </div>
                 </div>
             </div>
@@ -29,38 +29,31 @@
 export default {
 
     props: {
-        item: {
+        inventary: {
             type: Object,
             required: true
         }
     },
-    
-    data(){
-        return{
 
-            seleccion : 0
+    data() {
+        return {
+            maxPokeball: 15,
+            maxItemsIventory: 5,
+            seleccion: 0
         }
     }
-    
-    ,  methods: {
-        increase(item){
-            if (this.seleccion != item.quantityStock) {
-                this.seleccion += 1
-                this.$emit("quantityChange", { item, quantity: 1 }); // Emitiendo cambio de cantidad
 
+    , methods: {
 
+        useItem(item) {
+
+            if (item.quantity > 0) {
+
+                item.quantity -= 1
+                alert(`Se ha usado el objeto ${item.name.replace('-', ' ')} del inventario`)
             }
-        },
-        decrement(item){
-            if(this.seleccion > 0){
-                this.seleccion -= 1
-                this.$emit("quantityChange", { item, quantity: -1 }); // Emitiendo cambio de cantidad
-
-            }
-
         }
-
-    } 
+    }
 
 }
 </script>
