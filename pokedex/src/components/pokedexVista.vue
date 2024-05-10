@@ -312,7 +312,6 @@ export default {
         fav.classList.remove('noFav')
         fav.classList.add('fav')
         this.favorite.push(pokemon)
-        console.log(this.favorite)
       }
 
     },
@@ -328,8 +327,16 @@ export default {
         }
       }
       else {
+
         const type = pokemonOrType;
-        return { backgroundColor: this.colors[type.name] };
+        if (type.name == 'stellar') {
+          console.log('entro al estellar ')
+
+          return { background: `linear-gradient(to right, #F69EBC, #9DEBFF, #91BFF7, #9DD091, #FCDF7F, #FFBF7F, #F29091)` };
+        } else {
+          return { backgroundColor: this.colors[type.name] };
+
+        }
       }
     },
     updateEquip(pokemon) {
