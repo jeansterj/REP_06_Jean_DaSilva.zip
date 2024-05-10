@@ -8,7 +8,7 @@
       <div class="row mx-2">
 
         <div class="col-lg-2 col-md-3 col-sm-4 mb-3 me-2" v-for="itemData in item" :key="itemData.id">
-
+          
 
           <div class="card" :id="itemData.id">
             <div class="card-body">
@@ -19,13 +19,13 @@
 
                 </div>
                 <div>
-                  <p>Stock {{ itemData.quantityStock }}</p>
-
-                  <div class="d-flex justify-content-around">
-
-                    <button @click="decrement(itemData)">-</button>
-                    <input type="number" v-model="itemData.selectedQuantity" min="0" :max="itemData.quantityStock">
-                    <button @click="increase(itemData)">+</button>
+                <p v-if="itemData.quantityStock <= 0">Out of stock</p>
+                <p v-else>Stock {{ itemData.quantityStock }}</p>
+                <div class="d-flex justify-content-around">
+                  <!-- Deshabilita el botón si el stock máximo se ha alcanzado -->
+                  <button @click="decrement(itemData)" :disabled="itemData.quantityStock <= 0">-</button>
+                  <p>{{ itemData.selectedQuantity }}</p>
+                  <button @click="increase(itemData)" :disabled="itemData.quantityStock <= 0">+</button>
 
                   </div>
                 </div>
@@ -42,7 +42,7 @@
 <script>
 
 export default {
-
+  emits: ['buySelection'],
   data() {
     return {
       item: null,
@@ -77,7 +77,7 @@ export default {
       if (item.selectedQuantity < item.quantityStock) {
         item.selectedQuantity += 1;
         if (!this.selectedItems.find(selectedItem => selectedItem.id === item.id)) {
-          this.selectedItems.push({ id: item.id, quantity: 1 }); // Agrega el elemento seleccionado si no existe en el array
+          this.selectedItems.push({ id: item.id, name:item.name ,  quantity: 1 , sprites: { default: item.sprites.default } }); // Agrega el elemento seleccionado si no existe en el array
         } else {
           const selectedItem = this.selectedItems.find(selectedItem => selectedItem.id === item.id);
           selectedItem.quantity += 1; // Incrementa la cantidad si ya existe en el array
@@ -98,7 +98,14 @@ export default {
       }
     },
     buySelection() {
-      this.$emit('buySelection', this.selectedItems); // Emite los elementos seleccionados como un array de objetos {id, quantity}
+      this.$emit('buySelection', this.selectedItems); 
+// Emite los elementos seleccionados como un array de objetos {id, quantity}
+    this.item.forEach(item => {
+      if (item.quantityStock > 0) {
+        item.quantityStock -= item.selectedQuantity
+      } 
+        item.selectedQuantity = 0;
+      });
     },
   }, mounted() {
     this.fetchData();
