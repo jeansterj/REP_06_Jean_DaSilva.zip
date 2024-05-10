@@ -75,18 +75,26 @@ export default {
                                 existingItem.quantity = 15
                             }
                         } else {
-                            if (existingItem.quantity > 15) {
+                            if (existingItem.quantity > 5) {
                                 existingItem.quantity = 5
                             }                        
                         }
                     }
-
                 } else {
-                    this.inventary.push(item);
+                    if (item.category && (item.category.name === 'standard-balls' || item.category.name === 'special-ball')) {
+                        if (item.quantity > 15) {
+                            item.quantity = 15;
+                        }
+                    } else { 
+                        if (item.quantity > 5) {
+                            item.quantity = 5;
+                        }
+}
+                 
+                       this.inventary.push(item);
                 }
             });
-
-        }
+        },
     },
     mounted() {
         this.fetchData();

@@ -99,13 +99,16 @@ export default {
     },
     buySelection() {
       this.$emit('buySelection', this.selectedItems); 
-// Emite los elementos seleccionados como un array de objetos {id, quantity}
+    // Emite los elementos seleccionados como un array de objetos {id, quantity}
     this.item.forEach(item => {
       if (item.quantityStock > 0) {
         item.quantityStock -= item.selectedQuantity
       } 
         item.selectedQuantity = 0;
       });
+
+      this.selectedItems= []
+
     },
   }, mounted() {
     this.fetchData();
