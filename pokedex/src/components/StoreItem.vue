@@ -1,31 +1,31 @@
 <template>
 
-  <h1>hello</h1>
+  <h1 class="text-white my-5">Items available in store</h1>
 
-  <div class="container">
+  <div class="container-fluid">
     <div v-if="!item">Loading...</div>
     <div v-else>
-      <div class="row mx-2">
+      <div class="row mx-2 d-flex justify-content-center">
 
-        <div class="col-lg-2 col-md-3 col-sm-4 mb-3 me-2" v-for="itemData in item" :key="itemData.id">
+        <div class="col-lg-2 col-md-3 col-sm-4 mb-3 me-2 cardAjust" v-for="itemData in item" :key="itemData.id">
           
 
           <div class="card" :id="itemData.id">
-            <div class="card-body">
-              <img :src="itemData.sprites && itemData.sprites.default ? itemData.sprites.default : 'fallback-image-url'" class="card-img my-3 py-4" alt="item Image">
+            <div class="card-body text-capitalize">
+              <img :src="itemData.sprites && itemData.sprites.default ? itemData.sprites.default : 'fallback-image-url'" class="card-img my-5" alt="item Image">
               <div class="card-img-overlay">
                 <div class="text-center">
                   <h3> {{ itemData.name.replace('-', ' ') }}</h3>
-
+                  <p v-if="itemData.quantityStock <= 0">Out of stock</p>
+                  <p v-else class="mb-5">Stock {{ itemData.quantityStock }}</p>
                 </div>
-                <div>
-                <p v-if="itemData.quantityStock <= 0">Out of stock</p>
-                <p v-else>Stock {{ itemData.quantityStock }}</p>
+                <div class="buttonAjust">
+                
                 <div class="d-flex justify-content-around">
                   <!-- Deshabilita el botón si el stock máximo se ha alcanzado -->
-                  <button @click="decrement(itemData)" :disabled="itemData.quantityStock <= 0">-</button>
+                  <button @click="decrement(itemData)" :disabled="itemData.quantityStock <= 0" class="btn btn-danger">-</button>
                   <p>{{ itemData.selectedQuantity }}</p>
-                  <button @click="increase(itemData)" :disabled="itemData.quantityStock <= 0">+</button>
+                  <button @click="increase(itemData)" :disabled="itemData.quantityStock <= 0" class="btn btn-info">+</button>
 
                   </div>
                 </div>
@@ -34,7 +34,7 @@
           </div>
         </div>
       </div>
-      <button @click="buySelection()">Buy Selection</button>
+      <button class="btn btn-primary my-4" @click="buySelection()">Buy Selection</button>
     </div>
   </div>
 
@@ -115,3 +115,8 @@ export default {
   }
 }
 </script>
+<style>
+.buttonAjust{
+  margin-top: 55%;
+}
+</style>

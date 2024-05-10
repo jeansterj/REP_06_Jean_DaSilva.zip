@@ -9,8 +9,8 @@
 
                 </div>
                 <div>
-                    <div class="d-flex justify-content-around">
-                        <button @click="useItem(inventary)">Use</button>
+                    <div class="d-flex justify-content-around ajust">
+                        <button class="btn btn-primary" @click="useItem(inventary)">Use</button>
                         <p
                             v-if="inventary?.category?.name == 'standard-balls' || inventary?.category?.name == 'special-ball'">
                             {{ maxPokeball }}</p>
@@ -57,3 +57,11 @@ export default {
 
 }
 </script>
+<style>
+
+.ajust{
+
+    margin-top: 60%
+}
+
+</style>

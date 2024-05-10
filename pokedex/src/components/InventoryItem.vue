@@ -1,10 +1,10 @@
 <template>
-    <h1>hello</h1>
+    <h1 class="text-white mb-5">Available inventory</h1>
     <div v-if="!inventary">Loading...</div>
     <div v-else>
-        <div class="container">
-            <div class="row mx-2">
-                <itemStore class="col-lg-2 col-md-3 col-sm-4 mb-3 me-2" v-for="inventaryItem in inventary"
+        <div class="container-fluid">
+            <div class="row mx-2 d-flex justify-content-center">
+                <itemStore class="col-lg-2 col-md-3 col-sm-4 mb-3 me-2 text-capitalize " v-for="inventaryItem in inventary"
                     :key="inventaryItem.id" :inventary="inventaryItem">
                 </itemStore>
             </div>
@@ -101,3 +101,11 @@ export default {
     },
 }
 </script>
+<style>
+
+.cardAjust{
+
+    width: 225px;
+
+}
+</style>

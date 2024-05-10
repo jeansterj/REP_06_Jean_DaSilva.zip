@@ -1,14 +1,13 @@
 <template>
 
 
-  <button @click="showStore()">Store</button>
-  <button @click="showPokedex()">Pokedex</button>
-
+<div class="my-5 justify-content-around d-flex">
+  <button class="btn btn-light" @click="showStore()">Store</button>
+  <button class="btn btn-light" @click="showPokedex()">Pokedex</button>
+</div>
 
 
 <div v-if="activeStore">
-
-  <h2>{{ this.titleStore }} </h2>
 
 
 <inventory></inventory>
@@ -22,7 +21,7 @@
 
   <div v-if="activePokedex">
   
-    <h2>{{ this.titlePokedex }} </h2>
+    <h2 class="text-white">{{ this.titlePokedex }} </h2>
   <div v-if="!pokemon">Loading...</div>
   <div v-else>
 
@@ -39,11 +38,10 @@
 
       <div v-if="!types">Loading...</div>
       <div v-else>
-        <div class="d-flex justify-content-between my-4 ">
+        <div class="button-container my-4">
           <button class="btn btn-light" @click="ShowAll()">Show All Pokemons</button>
           <button v-for="type in types" :key="type.name" :style="getCardStyle(type)" class="btn text-capitalize"
             @click="updateSelectedTypes(type)">{{ type.name }}</button>
-
         </div>
       </div>
       <div v-if="filter">
@@ -59,12 +57,12 @@
               <img :src="pokemons.sprites.front_default" class="card-img my-3" alt="Pokemon Image">
               <div class="card-img-overlay">
                 <div class="d-flex justify-content-between">
-                  <button @click="updateEquip(pokemons)" :id="pokemons.id + 'equipF'">EQUIP PKMN</button>
-                  <button class="d-none" @click="updateEquip(pokemons)" :id="pokemons.id + 'equipNF'">TEAM UP
+                  <button @click="updateEquip(pokemons)" :id="pokemons.id + 'equipF'" class="btn btn-light">EQUIP PKMN</button>
+                  <button class="d-none btn btn-light" @click="updateEquip(pokemons)" :id="pokemons.id + 'equipNF' " >TEAM UP
                     PKMN</button>
-                  <h5 class="card-title">N.° #{{ pokemons.id.toString().padStart(3, '0') }} </h5>
+                  <h5 class="card-title mt-1">N.° #{{ pokemons.id.toString().padStart(3, '0') }} </h5>
                   <button @click="addFav(pokemons)" :id="pokemons.id + 'fav'" class="noButton"><span
-                      class="fa fa-star"></span></button>
+                      class="fa fa-star "></span></button>
                 </div>
 
 
@@ -74,7 +72,7 @@
               <div>
                 <div>
                   <h2> {{ pokemons.name }}</h2>
-                  <h4> Types: {{ getTypes(pokemons) }}</h4>
+                  <h4> {{ getTypes(pokemons) }}</h4>
                   <p class="card-text"><small> height {{ pokemons.height }} / weight {{ pokemons.weight }}</small></p>
                 </div>
               </div>
@@ -113,7 +111,7 @@
                       <button @click="updateEquip(equipos)" :id="equipos.id + 'equipF'">EQUIP PKMN</button>
                       <button class="d-none" @click="updateEquip(equipos)" :id="equipos.id + 'equipNF'">TEAM UP
                         PKMN</button>
-                      <h5 class="card-title">N.° #{{ equipos.id.toString().padStart(3, '0') }} </h5>
+                      <h5 class="card-title mt-1">N.° #{{ equipos.id.toString().padStart(3, '0') }} </h5>
                       <button @click="addFav(equipos)" :id="equipos.id + 'fav'" class="noButton"><span
                           class="fa fa-star"></span></button>
                     </div>
@@ -122,7 +120,7 @@
                   <div>
                     <div>
                       <h2> {{ equipos.name }}</h2>
-                      <h4> Types: {{ getTypes(equipos) }}</h4>
+                      <h4> {{ getTypes(equipos) }}</h4>
                       <p class="card-text"><small> height {{ equipos.height }} / weight {{ equipos.weight }}</small></p>
                     </div>
                   </div>
@@ -160,7 +158,7 @@
                       <button @click="updateEquip(favorites)" :id="favorites.id + 'equipF'">EQUIP PKMN</button>
                       <button class="d-none" @click="updateEquip(favorites)" :id="favorites.id + 'equipNF'">TEAM UP
                         PKMN</button>
-                      <h5 class="card-title">N.° #{{ favorites.id.toString().padStart(3, '0') }} </h5>
+                      <h5 class="card-title mt-1">N.° #{{ favorites.id.toString().padStart(3, '0') }} </h5>
                       <button @click="addFav(favorites)" :id="favorites.id + 'fav'" class="noButton"><span
                           class="fa fa-star"></span></button>
                     </div>
@@ -169,7 +167,7 @@
                   <div>
                     <div>
                       <h2> {{ favorites.name }}</h2>
-                      <h4> Types: {{ getTypes(favorites) }}</h4>
+                      <h4 > {{ getTypes(favorites) }}</h4>
                       <p class="card-text"><small> height {{ favorites.height }} / weight {{ favorites.weight }}</small>
                       </p>
                     </div>
@@ -406,7 +404,7 @@ export default {
 
 .noButton {
   border: none;
-  background-color: white;
+  background: none; 
 }
 
 .fav {
@@ -434,5 +432,11 @@ button.btn-close {
 
   overflow: auto;
   height: 420px;
+}
+
+.button-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); 
+  gap: 10px; 
 }
 </style>
