@@ -34,7 +34,7 @@
           </div>
         </div>
       </div>
-      <button class="btn btn-primary my-4" @click="buySelection()">Buy Selection</button>
+      <button class="btn btn-success my-4" @click="buySelection()">Buy Selection</button>
     </div>
   </div>
 
